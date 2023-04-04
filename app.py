@@ -1,29 +1,57 @@
-from flask import Flask
-from flask import request
+from flask import Flask,request ,render_template , jsonify
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "<h1>Hello, World! Welcome to my Development Server</h1>"
 
-@app.route("/hello_world1")
-def hello_world1():
-    return "<h2>You dont Know me!</h2>"
+@app.route('/')
+def home_page():
+    return render_template('index.html')
 
-@app.route("/hello_world2")
-def hello_world2():
-    return "<h3>I Am INVISIBLE!!!!!</h3>"
 
-@app.route('/test')
-def test():
-    a=5+6
-    return 'This is my function to run app {}'.format(a)
+@app.route('/math',methods=['POST'])
+def math_ops():
+    if(request.method == 'POST'):
+        ops = request.form['operation']
+        num1 = int(request.form['num1'])
+        num2 = int(request.form['num2'])
+        if ops == 'add':
+            r = num1+num2
+            result = "The sum of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+        if ops == 'subtract':
+            r = num1-num2
+            result = "The Difference of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+        if ops == 'multiply':
+            r = num1*num2
+            result = "The Product of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+        if ops == 'divide':
+            r = num1/num2
+            result = "The Quotient of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+            
 
-@app.route('/test1')
-def test1():
-    data = request.args.get('x')
-    return 'this is a data from my url {}'.format(data)
+        
+            
+        return render_template('results.html' , result = result)
+
+@app.route('/postman_data',methods=['POST'])
+def math_ops1():
+    if(request.method == 'POST'):
+        ops = request.json['operation']
+        num1 = int(request.json['num1'])
+        num2 = int(request.json['num2'])
+        if ops == 'add':
+            r = num1+num2
+            result = "The sum of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+        if ops == 'subtract':
+            r = num1-num2
+            result = "The Difference of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+        if ops == 'multiply':
+            r = num1*num2
+            result = "The Product of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+        if ops == 'divide':
+            r = num1/num2
+            result = "The Quotient of " + str(num1) + ' and ' + str(num2) + " is " + str(r)
+            
+        return jsonify(result)
 
 if __name__=="__main__":
     app.run(host="0.0.0.0")
